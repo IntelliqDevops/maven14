@@ -1,0 +1,63 @@
+@Library('mylibrary')_
+
+pipeline
+{
+    agent any
+    stages
+    {
+        stage('Download_Master')
+        {
+            steps
+            {
+                
+                script
+                {
+                    cicd.gitDownload("maven")
+                }
+            }
+        }
+        stage('Build_Master')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.buildArtifact()
+                }
+            }
+        }
+        stage('Deployment_Master')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.deployTomcat("DeclarativePipelinewithSahredLibraries","172.31.71.138","testapp")
+                }
+             
+            }
+        }
+        stage('Testing_Master')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.gitDownload("FunctionalTesting")
+                    cicd.runSelenium("DeclarativePipelinewithSahredLibraries")
+                }
+            }
+        }
+        stage('Delivery_Master')
+        {
+            steps
+            {
+                script
+                {
+                    cicd.deployTomcat("DeclarativePipelinewithSahredLibraries","172.31.79.126","prodapp")
+                }
+            }
+        }
+        
+    }
+}
